@@ -1,0 +1,17 @@
+body{
+    background-color: rgb(219, 209, 196);
+}
+.jumbotron{
+    background-color: crimson;
+    text-align: center;
+    color: rgb(219, 209, 196);
+    border-radius: 2%;
+    font-size: 60%;
+    font-weight: 600;
+    border: solid 4px navy;
+}
+.card{
+    margin:3px;
+    background-color: rgb(148, 143, 143);
+}
+
