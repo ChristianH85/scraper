@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper";
-mongoose.connect("mongodb://localhost/scraper", {
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true
 });
 ///scrape site for data create db collection and doc if doesnt exist
