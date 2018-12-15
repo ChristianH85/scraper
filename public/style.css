@@ -2,16 +2,33 @@ body{
     background-color: rgb(219, 209, 196);
 }
 .jumbotron{
-    background-color: crimson;
+    /* background-color: crimson; */
+    background-image: url("cropped-arsenal_banner.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
     text-align: center;
     color: rgb(219, 209, 196);
     border-radius: 2%;
     font-size: 60%;
     font-weight: 600;
     border: solid 4px navy;
+    
 }
 .card{
+    
     margin:3px;
     background-color: rgb(148, 143, 143);
+    overflow: auto;
 }
-
+.stories{
+    height: 400px;
+    overflow: auto;
+    
+}
+.comment{
+    width: 100%;
+}
+.input-form{
+    background-color: rgb(148, 143, 143);
+    border: solid 2px navy;
+}

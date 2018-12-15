@@ -1,45 +1,75 @@
-// $(document).on('ready', function(){
-
-
-$.getJSON("/articles", function(stories) {
-    console.log(stories)
+    $.getJSON("/articles", function(stories) {
+ 
     for (let i = 0; i < stories.length; i++) {
- $("#stories").append(
-    '<div class="card" style="width: 70rem;">'+
-    
-    '<div class="card-body">'+
-      '<h5 class="card-title">'+stories[i].title+'</h5>'+
-      '<p class="card-text">'+stories[i].summary+'</p>'+
-      '<a href='+stories[i].url+'class="btn btn-warning">'+stories[i].url+'</a>'+'<br>'+
       
-      '<button type="button" data-toggle="modal" class="btn btn-warning" data-target="#exampleModalLong">'+
-        "Comment"+
-      '</button>'+
-    '</div>'+
-  '</div>'
-        // '<div class="modal" tabindex="-1" role="dialog">'+
-    //   '<div class="modal-dialog" role="document">'+
-    //     '<div class="modal-content">'+
-    //       '<div class="modal-header">'+
-    //         '<h5 class="modal-title">'+ stories[i].title +'</h5>'+
-    //         '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'+
-    //           '<span aria-hidden="true">&times;</span>'+
-    //         '</button>'+
-    //       '</div>'+
-    //       '<div class="modal-body">'+
-    //         '<p>'+ stories[i].summary +'</p>'+
-    //         '<p>'+ stories[i].url +'</p>'+
-    //       '</div>'+
-    //       '<div class="modal-footer">'+
-    //         '<button type="button" class="btn btn-primary" data-target="#exampleModalLong">'+
-    //         "Comment"+
-    //         '</button>'+
-    //       '</div>'+
-    //     '</div>'+
-    //   '</div>'+
-    // '</div>'
+ $("#stories").append(
+    `<div class="card">
+      <div class="card-body">
+      <h5 class="card-title">${stories[i].title}</h5>
+      <p class="card-text"data-id= "${stories[i]._id}"q >${stories[i].summary}</p>
+      <a href=${stories[i].url} class="btn btn-warning">${stories[i].url}</a><br>
+      <button type="click" data-toggle="modal" id = "compose" class="btn btn-warning" data-target="#exampleModalLong"> "Comment"
+      </button>
+      </div>
+      </div>`
+   
+
     )
     }
   });
-// })
-//   "<p " + stories[i].title + "'>" + stories[i].summary + "<br />" + stories[i].url + "</p>");
+  
+  $(document).on('click',"p",  function(){
+    $("#stories").empty()
+    var thisId = $(this).attr("data-id");
+    console.log(thisId)
+    $.ajax({
+        method: "GET",
+        url: "/articles/" + thisId
+      }).then(function(data){
+          console.log(data)
+          $("#comment").append(
+            `<h2>${data.title}</h2>
+            <form class= "input-form" >
+            <div class = "form-group">
+            <input placeholder= "Author 'Be Honest Now'" id = "authName" class = "form-control">
+            <textarea placeholder="Write comment here" id = "post"class ="form-control" rows= "8"></textarea>
+            <button type="button" data-id= "${data._id}" class="btn btn-primary id= "postIt">Post</button>
+            </div>
+            </form>`
+            )
+            if(data.post){
+              console.log(data.post)
+              $("#stories").append(`
+              <div class="card">
+              <div class="card-body">
+              <h3>${data.post.title}</h3>
+              <p class="card-text" >${data.post.body}</p>
+              </div>
+              </div>`)
+            }
+            else{
+              $("#stories").append(`<h2> No Stories Yet</h2>`)
+            }
+        // 
+  })
+  })
+  $(document).on("click", "button", function() {
+    console.log("click")
+    var thisId = $(this).attr("data-id");
+    $.ajax({
+      method: "POST",
+      url: "/articles/" + thisId,
+      data: {
+        title: $("#authName").val(),
+
+        body: $("#post").val()
+      }
+    })
+      .then(function(data) {
+        console.log(data);
+        $("#stories").empty();
+      });
+ 
+    $("#authName").val("");
+    $("#post").val("");
+  });

@@ -1,5 +1,4 @@
 const express = require("express");
-const exphbs = require("express-handlebars");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const logger = require("morgan");
@@ -54,19 +53,26 @@ app.get("/articles", function(req, res) {
        return res.json(err);
       });
 })
-app.get("/comment/:id",function(req,res){
-    db.Post.create(req.body).then(function(dbNote) {
-        // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
-        // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-        // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-        return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
-      })
+app.get("/articles/:id", function(req, res) {
+    db.Article.findOne({ _id: req.params.id })
+      .populate("post")
       .then(function(dbArt) {
-        // If we were able to successfully update an Article, send it back to the client
+          console.log(dbArt)
         res.json(dbArt);
       })
       .catch(function(err) {
-        // If an error occurred, send it to the client
+        
+        res.json(err);
+      });
+  });
+app.post("/articles/:id",function(req,res){
+    db.Post.create(req.body).then(function(dbPost) {
+        return db.Article.findOneAndUpdate({ _id: req.params.id }, { post: dbPost._id }, { new: true });
+      })
+      .then(function(dbArt) {
+        res.json(dbArt);
+      })
+      .catch(function(err) {
         res.json(err);
       });
 })
