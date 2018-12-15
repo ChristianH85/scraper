@@ -16,7 +16,7 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use(express.static("public"));
 
-
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper";
 mongoose.connect("mongodb://localhost/scraper", {
     useNewUrlParser: true
 });
